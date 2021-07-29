@@ -1,3 +1,4 @@
+'''Run with horovod. Based on horovod's python example and modify the model to be same with tensorflow model for comparison.'''
 import argparse
 import os
 from filelock import FileLock
