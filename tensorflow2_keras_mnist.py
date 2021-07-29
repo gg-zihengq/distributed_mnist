@@ -37,13 +37,13 @@ dataset = tf.data.Dataset.from_tensor_slices(
 dataset = dataset.repeat().shuffle(10000).batch(128)
 
 mnist_model = tf.keras.Sequential([
-    tf.keras.layers.Conv2D(6, 5, activation='tanh', input_shape=x_train.shape[1:])
-    tf.keras.layers.AveragePooling2D(2)
-    tf.keras.layers.Conv2D(16, 5, activation='tanh')
-    tf.keras.layers.AveragePooling2D(2)
-    tf.keras.layers.Conv2D(120, 5, activation='tanh')
-    tf.keras.layers.Flatten()
-    tf.keras.layers.Dense(84, activation='tanh')
+    tf.keras.layers.Conv2D(32, [3, 3], activation='relu'),
+    tf.keras.layers.Conv2D(64, [3, 3], activation='relu'),
+    tf.keras.layers.MaxPooling2D(pool_size=(2, 2)),
+    tf.keras.layers.Dropout(0.25),
+    tf.keras.layers.Flatten(),
+    tf.keras.layers.Dense(128, activation='relu'),
+    tf.keras.layers.Dropout(0.5),
     tf.keras.layers.Dense(10, activation='softmax')
 ])
 
