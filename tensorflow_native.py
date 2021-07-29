@@ -72,6 +72,6 @@ with strategy.scope():
   multi_worker_model = build_and_compile_cnn_model(num_workers)
 
 start = time.time()
-multi_worker_model.fit(multi_worker_dataset, epochs=10)
+multi_worker_model.fit(multi_worker_dataset, epochs=10, steps_per_epoch = 500//num_workers)
 end = time.time()
 print('train 10 epochs take:'+str(end-start))
