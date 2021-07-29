@@ -22,7 +22,7 @@ parser.add_argument(
         help="input batch size for training (default: 128)",
     )
 
-parser.parse_args()
+parser = parser.parse_args()
 
 def mnist_dataset(batch_size):
   (x_train, y_train), _ = tf.keras.datasets.mnist.load_data()
