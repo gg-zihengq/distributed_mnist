@@ -262,7 +262,7 @@ if __name__ == "__main__":
     )
 
     # Container environment
-    parser.add_argument("--hosts", type=list, default=['localhost'])
+    parser.add_argument("--hosts", nargs='+', default=['localhost'])
     parser.add_argument("--host-rank", type=int, default=0)
     parser.add_argument("--model-dir", type=str, default='~')
     parser.add_argument("--data-dir", type=str, default='~/data')
