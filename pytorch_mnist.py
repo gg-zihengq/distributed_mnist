@@ -65,9 +65,9 @@ class Net(nn.Module):
     def forward(self, x):
         x = self.feature_extractor(x)
         x = torch.flatten(x, 1)
-        logits = self.classifier(x)
-        probs = F.log_softmax(logits, dim=1)
-        return probs
+        x = self.classifier(x)
+        x = F.log_softmax(logits, dim=1)
+        return x
 
 
 def train(epoch):
