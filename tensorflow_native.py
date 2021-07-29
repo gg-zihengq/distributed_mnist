@@ -7,7 +7,6 @@ import tensorflow as tf
 import numpy as np
 import time
 
-os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
 os.environ.pop('TF_CONFIG', None)
 if '.' not in sys.path:
   sys.path.insert(0, '.')
