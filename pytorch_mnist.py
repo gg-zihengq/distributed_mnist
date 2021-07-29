@@ -47,7 +47,7 @@ class Net(nn.Module):
         self.feature_extractor = nn.Sequential(            
             nn.Conv2d(in_channels=1, out_channels=32, kernel_size=3, stride=1),
             nn.Relu(),
-            nn.Conv2d(in_channels=32, out_channels=61=4, kernel_size=3, stride=1),
+            nn.Conv2d(in_channels=32, out_channels=61, kernel_size=3, stride=1),
             nn.Relu(),
             nn.AvgPool2d(kernel_size=2),
             nn.Dropout(0.25)
