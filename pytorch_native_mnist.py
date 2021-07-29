@@ -108,6 +108,7 @@ def train(args):
         # Initialize the distributed environment.
         world_size = len(args.hosts)
         os.environ["WORLD_SIZE"] = str(world_size)
+        os.environ["MASTER_ADDR"] = args.hosts[0]
         host_rank = args.host_rank
         dist.init_process_group(backend=args.backend, rank=host_rank, world_size=world_size)
         logger.info(
