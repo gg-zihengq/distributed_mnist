@@ -259,10 +259,10 @@ if __name__ == "__main__":
     )
 
     # Container environment
-    parser.add_argument("--hosts", type=list, default=json.loads(os.environ["SM_HOSTS"]))
-    parser.add_argument("--host-rank", type=int, default=os.environ["hostrank"])
-    parser.add_argument("--model-dir", type=str, default=os.environ["SM_MODEL_DIR"])
-    parser.add_argument("--data-dir", type=str, default=os.environ["SM_CHANNEL_TRAINING"])
-    parser.add_argument("--num-gpus", type=int, default=os.environ["SM_NUM_GPUS"])
+    parser.add_argument("--hosts", type=list, default=['localhost']))
+    parser.add_argument("--host-rank", type=int, default=0)
+    parser.add_argument("--model-dir", type=str, default='~')
+    parser.add_argument("--data-dir", type=str, default='~/data')
+    parser.add_argument("--num-gpus", type=int, default=1)
 
     train(parser.parse_args())
