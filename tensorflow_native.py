@@ -45,7 +45,7 @@ def build_and_compile_cnn_model(num_workers):
       tf.keras.layers.Flatten(),
       tf.keras.layers.Dense(128, activation='relu'),
       tf.keras.layers.Dropout(0.5),
-      tf.keras.layers.Dense(10)
+      tf.keras.layers.Dense(10, activation='softmax')
   ])
   model.compile(
       loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
