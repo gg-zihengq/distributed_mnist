@@ -66,7 +66,7 @@ class Net(nn.Module):
         x = self.feature_extractor(x)
         x = torch.flatten(x, 1)
         x = self.classifier(x)
-        x = F.log_softmax(logits, dim=1)
+        x = F.log_softmax(x, dim=1)
         return x
 
 
