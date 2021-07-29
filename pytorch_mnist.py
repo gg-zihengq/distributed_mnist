@@ -39,23 +39,34 @@ parser.add_argument('--data-dir',
 
 
 class Net(nn.Module):
-    def __init__(self):
-        super(Net, self).__init__()
-        self.conv1 = nn.Conv2d(1, 32, kernel_size=3)
-        self.conv2 = nn.Conv2d(32, 64, kernel_size=3)
-        self.conv2_drop = nn.Dropout2d(0.25)
-        self.fc1 = nn.Linear(589824, 128)
-        self.fc2 = nn.Linear(128, 10)
+
+    def __init__(self, n_classes=10):
+        super(LeNet5, self).__init__()
+        
+        self.feature_extractor = nn.Sequential(            
+            nn.Conv2d(in_channels=1, out_channels=6, kernel_size=5, stride=1),
+            nn.Tanh(),
+            nn.AvgPool2d(kernel_size=2),
+            nn.Conv2d(in_channels=6, out_channels=16, kernel_size=5, stride=1),
+            nn.Tanh(),
+            nn.AvgPool2d(kernel_size=2),
+            nn.Conv2d(in_channels=16, out_channels=120, kernel_size=5, stride=1),
+            nn.Tanh()
+        )
+
+        self.classifier = nn.Sequential(
+            nn.Linear(in_features=120, out_features=84),
+            nn.Tanh(),
+            nn.Linear(in_features=84, out_features=n_classes),
+        )
+
 
     def forward(self, x):
-        x = F.relu(self.conv1(x))
-        x = F.relu(self.conv2(x))
-        x = self.conv2_drop(F.max_pool2d(x, 2))
-        x = x.view(-1, 9216)
-        x = F.relu(self.fc1(x))
-        x = F.dropout(x, training=self.training)
-        x = self.fc2(x)
-        return F.log_softmax(x)
+        x = self.feature_extractor(x)
+        x = torch.flatten(x, 1)
+        logits = self.classifier(x)
+        probs = F.softmax(logits, dim=1)
+        return probs
 
 
 def train(epoch):

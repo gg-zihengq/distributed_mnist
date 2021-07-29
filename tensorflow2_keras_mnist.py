@@ -36,13 +36,15 @@ dataset = tf.data.Dataset.from_tensor_slices(
 dataset = dataset.repeat().shuffle(10000).batch(128)
 
 mnist_model = tf.keras.Sequential([
-    tf.keras.layers.Conv2D(32, [3, 3], activation='relu'),
-    tf.keras.layers.Conv2D(64, [3, 3], activation='relu'),
-    tf.keras.layers.MaxPooling2D(pool_size=(2, 2)),
-    tf.keras.layers.Dropout(0.25),
-    tf.keras.layers.Flatten(),
-    tf.keras.layers.Dense(128, activation='relu'),
-    tf.keras.layers.Dropout(0.5),
+    tf.keras.layers.Conv2D(6, 5, activation='tanh', input_shape=x_train.shape[1:])
+    tf.keras.layers.AveragePooling2D(2)
+    tf.keras.layers.Activation('sigmoid')
+    tf.keras.layers.Conv2D(16, 5, activation='tanh')
+    tf.keras.layers.AveragePooling2D(2)
+    tf.keras.layers.Activation('sigmoid')
+    tf.keras.layers.Conv2D(120, 5, activation='tanh')
+    tf.keras.layers.Flatten()
+    tf.keras.layers.Dense(84, activation='tanh')
     tf.keras.layers.Dense(10, activation='softmax')
 ])
 
@@ -88,4 +90,4 @@ verbose = 1 if hvd.rank() == 0 else 0
 
 # Train the model.
 # Horovod: adjust number of steps based on number of GPUs.
-mnist_model.fit(dataset, steps_per_epoch=500 // hvd.size(), callbacks=callbacks, epochs=24, verbose=verbose)
+mnist_model.fit(dataset, steps_per_epoch=500 // hvd.size(), callbacks=callbacks, epochs=10, verbose=verbose)
