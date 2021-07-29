@@ -54,7 +54,7 @@ class Net(nn.Module):
         )
 
         self.classifier = nn.Sequential(
-            nn.Linear(in_features=1080, out_features=128),
+            nn.Linear(in_features=9216, out_features=128),
             nn.ReLU(),
             nn.Dropout(0.5),
             nn.Linear(in_features=128, out_features=n_classes),
