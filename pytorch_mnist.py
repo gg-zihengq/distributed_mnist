@@ -46,16 +46,16 @@ class Net(nn.Module):
         
         self.feature_extractor = nn.Sequential(            
             nn.Conv2d(in_channels=1, out_channels=32, kernel_size=3, stride=1),
-            nn.Relu(),
-            nn.Conv2d(in_channels=32, out_channels=61, kernel_size=3, stride=1),
-            nn.Relu(),
+            nn.ReLU(),
+            nn.Conv2d(in_channels=32, out_channels=64, kernel_size=3, stride=1),
+            nn.ReLU(),
             nn.AvgPool2d(kernel_size=2),
             nn.Dropout(0.25)
         )
 
         self.classifier = nn.Sequential(
             nn.Linear(in_features=1080, out_features=128),
-            nn.Relu(),
+            nn.ReLU(),
             nn.Dropout(0.5),
             nn.Linear(in_features=128, out_features=n_classes),
         )
