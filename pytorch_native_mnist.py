@@ -108,7 +108,7 @@ def train(args):
         # Initialize the distributed environment.
         world_size = len(args.hosts)
         os.environ["WORLD_SIZE"] = str(world_size)
-        host_rank = args.hosts.index(args.current_host)
+        host_rank = args.host_rank
         dist.init_process_group(backend=args.backend, rank=host_rank, world_size=world_size)
         logger.info(
             "Initialized the distributed environment: '{}' backend on {} nodes. ".format(
@@ -260,7 +260,7 @@ if __name__ == "__main__":
 
     # Container environment
     parser.add_argument("--hosts", type=list, default=json.loads(os.environ["SM_HOSTS"]))
-    parser.add_argument("--current-host", type=str, default=os.environ["SM_CURRENT_HOST"])
+    parser.add_argument("--host-rank", type=int, default=os.environ["hostrank"])
     parser.add_argument("--model-dir", type=str, default=os.environ["SM_MODEL_DIR"])
     parser.add_argument("--data-dir", type=str, default=os.environ["SM_CHANNEL_TRAINING"])
     parser.add_argument("--num-gpus", type=int, default=os.environ["SM_NUM_GPUS"])
