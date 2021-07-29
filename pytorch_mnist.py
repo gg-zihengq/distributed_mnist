@@ -38,27 +38,26 @@ parser.add_argument('--gradient-predivide-factor', type=float, default=1.0,
 parser.add_argument('--data-dir',
                     help='location of the training dataset in the local filesystem (will be downloaded if needed)')
 
-
+    
 class Net(nn.Module):
 
     def __init__(self, n_classes=10):
         super(Net, self).__init__()
         
         self.feature_extractor = nn.Sequential(            
-            nn.Conv2d(in_channels=1, out_channels=6, kernel_size=3, stride=1),
-            nn.Tanh(),
+            nn.Conv2d(in_channels=1, out_channels=32, kernel_size=3, stride=1),
+            nn.Relu(),
+            nn.Conv2d(in_channels=32, out_channels=61=4, kernel_size=3, stride=1),
+            nn.Relu(),
             nn.AvgPool2d(kernel_size=2),
-            nn.Conv2d(in_channels=6, out_channels=16, kernel_size=3, stride=1),
-            nn.Tanh(),
-            nn.AvgPool2d(kernel_size=2),
-            nn.Conv2d(in_channels=16, out_channels=120, kernel_size=3, stride=1),
-            nn.Tanh()
+            nn.Dropout(0.25)
         )
 
         self.classifier = nn.Sequential(
-            nn.Linear(in_features=120, out_features=84),
-            nn.Tanh(),
-            nn.Linear(in_features=84, out_features=n_classes),
+            nn.Linear(in_features=1080, out_features=128),
+            nn.Relu(),
+            nn.Dropout(0.5),
+            nn.Linear(in_features=128, out_features=n_classes),
         )
 
 
