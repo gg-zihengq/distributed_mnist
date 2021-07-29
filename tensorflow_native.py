@@ -34,10 +34,10 @@ def mnist_dataset(batch_size):
       (x_train, y_train)).shuffle(60000).repeat().batch(batch_size)
   return train_dataset
 
-def build_and_compile_cnn_model():
+def build_and_compile_cnn_model(num_workers):
   model = tf.keras.Sequential([
-      tf.keras.Input(shape=(28, 28)),
-      tf.keras.layers.Reshape(target_shape=(28, 28, 1)),
+#       tf.keras.Input(shape=(28, 28)),
+#       tf.keras.layers.Reshape(target_shape=(28, 28, 1)),
       tf.keras.layers.Conv2D(32, [3, 3], activation='relu'),
       tf.keras.layers.Conv2D(64, [3, 3], activation='relu'),
       tf.keras.layers.MaxPooling2D(pool_size=(2, 2)),
@@ -49,7 +49,7 @@ def build_and_compile_cnn_model():
   ])
   model.compile(
       loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
-      optimizer=tf.keras.optimizers.SGD(learning_rate=0.001),
+      optimizer=tf.keras.optimizers.SGD(learning_rate=0.001*num_workers),
       metrics=['accuracy'])
   return model
 
@@ -73,7 +73,7 @@ multi_worker_dataset = mnist_dataset(global_batch_size)
 
 with strategy.scope():
   # Model building/compiling need to be within `strategy.scope()`.
-  multi_worker_model = build_and_compile_cnn_model()
+  multi_worker_model = build_and_compile_cnn_model(num_workers)
 
 start = time.time()
 multi_worker_model.fit(multi_worker_dataset, epochs=10, steps_per_epoch=500//num_workers)
