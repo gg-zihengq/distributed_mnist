@@ -208,4 +208,4 @@ if __name__ == '__main__':
     for epoch in range(1, args.epochs + 1):
         train(epoch)
     end = time.time()
-    print('total time of train and test:'+str(end-start))
+    print('total time of train 10 epochs:'+str(end-start))
