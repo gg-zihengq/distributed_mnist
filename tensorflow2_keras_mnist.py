@@ -15,6 +15,7 @@
 
 import tensorflow as tf
 import horovod.tensorflow.keras as hvd
+import time
 
 # Horovod: initialize Horovod.
 hvd.init()
@@ -36,13 +37,13 @@ dataset = tf.data.Dataset.from_tensor_slices(
 dataset = dataset.repeat().shuffle(10000).batch(128)
 
 mnist_model = tf.keras.Sequential([
-    tf.keras.layers.Conv2D(6, 5, activation='tanh', input_shape=x_train.shape[1:])
+    tf.keras.layers.Conv2D(6, 3, activation='tanh', input_shape=x_train.shape[1:])
     tf.keras.layers.AveragePooling2D(2)
     tf.keras.layers.Activation('sigmoid')
-    tf.keras.layers.Conv2D(16, 5, activation='tanh')
+    tf.keras.layers.Conv2D(16, 3, activation='tanh')
     tf.keras.layers.AveragePooling2D(2)
     tf.keras.layers.Activation('sigmoid')
-    tf.keras.layers.Conv2D(120, 5, activation='tanh')
+    tf.keras.layers.Conv2D(120, 3, activation='tanh')
     tf.keras.layers.Flatten()
     tf.keras.layers.Dense(84, activation='tanh')
     tf.keras.layers.Dense(10, activation='softmax')
@@ -87,7 +88,9 @@ if hvd.rank() == 0:
 
 # Horovod: write logs on worker 0.
 verbose = 1 if hvd.rank() == 0 else 0
-
+start = time.time()
 # Train the model.
 # Horovod: adjust number of steps based on number of GPUs.
 mnist_model.fit(dataset, steps_per_epoch=500 // hvd.size(), callbacks=callbacks, epochs=10, verbose=verbose)
+end = time.time()
+print('total time to train 10 epochs:'+str(end-start))

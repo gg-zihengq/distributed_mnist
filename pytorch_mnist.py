@@ -9,6 +9,7 @@ import torch.optim as optim
 from torchvision import datasets, transforms
 import torch.utils.data.distributed
 import horovod.torch as hvd
+import time
 
 # Training settings
 parser = argparse.ArgumentParser(description='PyTorch MNIST Example')
@@ -44,13 +45,13 @@ class Net(nn.Module):
         super(Net, self).__init__()
         
         self.feature_extractor = nn.Sequential(            
-            nn.Conv2d(in_channels=1, out_channels=6, kernel_size=5, stride=1),
+            nn.Conv2d(in_channels=1, out_channels=6, kernel_size=3, stride=1),
             nn.Tanh(),
             nn.AvgPool2d(kernel_size=2),
-            nn.Conv2d(in_channels=6, out_channels=16, kernel_size=5, stride=1),
+            nn.Conv2d(in_channels=6, out_channels=16, kernel_size=3, stride=1),
             nn.Tanh(),
             nn.AvgPool2d(kernel_size=2),
-            nn.Conv2d(in_channels=16, out_channels=120, kernel_size=5, stride=1),
+            nn.Conv2d(in_channels=16, out_channels=120, kernel_size=3, stride=1),
             nn.Tanh()
         )
 
@@ -203,7 +204,8 @@ if __name__ == '__main__':
                                          compression=compression,
                                          op=hvd.Adasum if args.use_adasum else hvd.Average,
                                          gradient_predivide_factor=args.gradient_predivide_factor)
-
+    start = time.time()
     for epoch in range(1, args.epochs + 1):
         train(epoch)
-        test()
+    end = time.time()
+    print('total time of train and test:'+str(end-start))
