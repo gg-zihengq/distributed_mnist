@@ -49,7 +49,7 @@ mnist_model = tf.keras.Sequential([
 
 # Horovod: adjust learning rate based on number of GPUs.
 scaled_lr = 0.001 * hvd.size()
-opt = tf.optimizers.Adam(scaled_lr)
+opt = tf.optimizers.SGD(scaled_lr)
 
 # Horovod: add Horovod DistributedOptimizer.
 opt = hvd.DistributedOptimizer(
