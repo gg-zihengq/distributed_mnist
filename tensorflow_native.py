@@ -36,8 +36,8 @@ def mnist_dataset(batch_size):
 
 def build_and_compile_cnn_model(num_workers):
   model = tf.keras.Sequential([
-#       tf.keras.Input(shape=(28, 28)),
-#       tf.keras.layers.Reshape(target_shape=(28, 28, 1)),
+      tf.keras.Input(shape=(28, 28)),
+      tf.keras.layers.Reshape(target_shape=(28, 28, 1)),
       tf.keras.layers.Conv2D(32, [3, 3], activation='relu'),
       tf.keras.layers.Conv2D(64, [3, 3], activation='relu'),
       tf.keras.layers.MaxPooling2D(pool_size=(2, 2)),
@@ -59,11 +59,7 @@ tf_config = {
     },
     'task': {'type': 'worker', 'index': parser.host_rank}
 }
-# os.environ["TF_CONFIG"]=json.dumps(tf_config)
 
-strategy = tf.distribute.MultiWorkerMirroredStrategy()
-
-# tf_config = json.loads(os.environ['TF_CONFIG'])
 num_workers = len(tf_config['cluster']['worker'])
 
 strategy = tf.distribute.MultiWorkerMirroredStrategy()
@@ -76,6 +72,6 @@ with strategy.scope():
   multi_worker_model = build_and_compile_cnn_model(num_workers)
 
 start = time.time()
-multi_worker_model.fit(multi_worker_dataset, epochs=10, steps_per_epoch=500//num_workers)
+multi_worker_model.fit(multi_worker_dataset, epochs=10)
 end = time.time()
 print('train 10 epochs take:'+str(end-start))
