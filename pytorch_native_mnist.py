@@ -15,6 +15,8 @@ import torch.utils.data
 import torch.utils.data.distributed
 from torchvision import datasets, transforms
 
+import time
+
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 logger.addHandler(logging.StreamHandler(sys.stdout))
@@ -154,30 +156,34 @@ def train(args):
 
     optimizer = optim.SGD(model.parameters(), lr=args.lr, momentum=args.momentum)
 
+    start = time.time()
+    
     for epoch in range(1, args.epochs + 1):
         model.train()
-        for batch_idx, (data, target) in enumerate(train_loader, 1):
-            data, target = data.to(device), target.to(device)
-            optimizer.zero_grad()
-            output = model(data)
-            loss = F.nll_loss(output, target)
-            loss.backward()
-            if is_distributed and not use_cuda:
-                # average gradients manually for multi-machine cpu case only
-                _average_gradients(model)
-            optimizer.step()
-            if batch_idx % args.log_interval == 0:
-                logger.info(
-                    "Train Epoch: {} [{}/{} ({:.0f}%)] Loss: {:.6f}".format(
-                        epoch,
-                        batch_idx * len(data),
-                        len(train_loader.sampler),
-                        100.0 * batch_idx / len(train_loader),
-                        loss.item(),
-                    )
-                )
-        test(model, test_loader, device)
-    save_model(model, args.model_dir)
+    end = time.time()
+    print('time to train 10 epochs:'+str(end-start))
+#         for batch_idx, (data, target) in enumerate(train_loader, 1):
+#             data, target = data.to(device), target.to(device)
+#             optimizer.zero_grad()
+#             output = model(data)
+#             loss = F.nll_loss(output, target)
+#             loss.backward()
+#             if is_distributed and not use_cuda:
+#                 # average gradients manually for multi-machine cpu case only
+#                 _average_gradients(model)
+#             optimizer.step()
+#             if batch_idx % args.log_interval == 0:
+#                 logger.info(
+#                     "Train Epoch: {} [{}/{} ({:.0f}%)] Loss: {:.6f}".format(
+#                         epoch,
+#                         batch_idx * len(data),
+#                         len(train_loader.sampler),
+#                         100.0 * batch_idx / len(train_loader),
+#                         loss.item(),
+#                     )
+#                 )
+#         test(model, test_loader, device)
+#     save_model(model, args.model_dir)
 
 
 def test(model, test_loader, device):
