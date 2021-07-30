@@ -58,6 +58,7 @@ def _get_train_data_loader(batch_size, training_dir, is_distributed, **kwargs):
     dataset = datasets.MNIST(
         training_dir,
         train=True,
+        download=True,
         transform=transforms.Compose(
             [transforms.ToTensor(), transforms.Normalize((0.1307,), (0.3081,))]
         ),
